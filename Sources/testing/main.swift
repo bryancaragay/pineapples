@@ -26,6 +26,7 @@ var radiatorChambers: [Chamber] = []
 var currentChamber: Chamber?
 var currentScore = 0
 var currentRadiatorChambers: [Int] = []
+var bestRadiatorChambers: [Int] = []
 
 // Returns the chamber for this ID
 func getChamberForID(_ id: Int) -> Chamber? {
@@ -105,6 +106,7 @@ func saveScoreIfNeeded() {
     let newScore = getPineappleScore()
     if newScore > currentScore {
         currentScore = newScore
+        bestRadiatorChambers = currentRadiatorChambers
     }
 }
 
@@ -147,18 +149,24 @@ func placeRadiators() {
         }
         
         checkConfiguration()
+        currentRadiatorChambers = []
         base.chambers.shuffle()
     }
     
     var finalOutput = ""
-    for (index, id) in currentRadiatorChambers.enumerated() {
+    for (index, id) in bestRadiatorChambers.enumerated() {
         if index == 0 {
             finalOutput += "\(id)"
         } else {
             finalOutput += ",\(id)"
         }
     }
+    
     print(finalOutput)
+    
+    bestRadiatorChambers = []
+    currentRadiatorChambers = []
+    currentScore = 0
 }
 
 // Method to construct the bases from the text file.
@@ -170,10 +178,11 @@ func buildBase() {
             if base != nil {
                 // Main app logic
                 placeRadiators()
-            } else {
-                // Reset the base after we configure the last one
-                base = Base()
             }
+            
+            // Reset the base after we configure the last one
+            base = Base()
+            base?.radiators = 0
         }
         
         // Assign radiator count to the base
