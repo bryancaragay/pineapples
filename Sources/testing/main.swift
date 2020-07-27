@@ -136,15 +136,29 @@ func resetChamber(_ chamber: Chamber) {
     }
 }
 
+// Attempts to place the radiators in the base such that we get the highest score. We randomly try 100 combinations of random starting points, in hopes to hit a lot of use cases without repeating attempts.
 func placeRadiators() {
     guard let base = base else { return }
     
     // Try 100 variations starting with different nodes each time. Not a huge fan of this, but it works.
-    for _ in 0...100 {
-        base.chambers.forEach { chamber in
-            if currentRadiatorChambers.count < base.radiators {
-                addRadiatorToChamber(chamber: chamber)
-                validateRadiator(chamber: chamber)
+    for index in 0...99 {
+        if index == 0 {
+            // First try ordering the chambers so the ones with the most pineapples are tried first.
+            let chambers = base.chambers.sorted{ $0.pineapples > $1.pineapples }
+            
+            chambers.forEach { chamber in
+                if currentRadiatorChambers.count < base.radiators {
+                    addRadiatorToChamber(chamber: chamber)
+                    validateRadiator(chamber: chamber)
+                }
+            }
+        } else {
+            // Now try random sorted
+            base.chambers.forEach { chamber in
+                if currentRadiatorChambers.count < base.radiators {
+                    addRadiatorToChamber(chamber: chamber)
+                    validateRadiator(chamber: chamber)
+                }
             }
         }
         
