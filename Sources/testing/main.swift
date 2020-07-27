@@ -17,7 +17,7 @@ class Chamber {
     }
 }
     
-let contents = try String(contentsOfFile: "/Users/bryanacaragay/Desktop/bases.txt", encoding: .utf8)
+let contents = try String(contentsOfFile: "/Users/bryanacaragay/Desktop/maps-test.txt", encoding: .utf8)
 
 var base: Base?
 var radiatorChambers: [Chamber] = []
@@ -140,8 +140,8 @@ func resetChamber(_ chamber: Chamber) {
 func placeRadiators() {
     guard let base = base else { return }
     
-    // Try 100 variations starting with different nodes each time. Not a huge fan of this, but it works.
-    for index in 0...99 {
+    // Try 50 variations starting with different nodes each time. Not a huge fan of this, but it works, not including the first pass where we sort the rooms based on yield ability.
+    for index in 0...50 {
         if index == 0 {
             // First try ordering the chambers so the ones with the most pineapples are tried first.
             let chambers = base.chambers.sorted{ $0.pineapples > $1.pineapples }
